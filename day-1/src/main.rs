@@ -2,16 +2,12 @@ use std::fs;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {    
-    let contents: String = fs::read_to_string("input.txt")?;
-    
-    let elves: Vec<Vec<&str>> = contents.split("\n\n")
+    let mut calories: Vec<i32> = fs::read_to_string("input.txt")?
+        .split("\n\n")
         .map(|x| { x.split("\n")
             .collect::<Vec<&str>>()
-    }).collect();        
-
-    let mut calories = elves.iter()
-        .map(|x| { x.iter().fold(0, |sum, cal| cal.parse::<i32>().unwrap() + sum) })
-        .collect::<Vec<i32>>();    
+    }).map(|x| { x.iter().fold(0, |sum, cal| cal.parse::<i32>().unwrap() + sum) })
+      .collect::<Vec<i32>>();    
 
     println!("Max calories: {}", calories.iter().max().unwrap());
 
