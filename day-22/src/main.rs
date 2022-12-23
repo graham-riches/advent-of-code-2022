@@ -67,17 +67,17 @@ impl FromStr for Grid {
 
 impl Grid {
     // Apply all instructions
-    fn apply_instructions(&mut self, instructions: &Vec<Instruction>) {
+    fn apply_instructions_flatearth(&mut self, instructions: &Vec<Instruction>) {
         for instruction in instructions {
             match instruction {
-                Instruction::Move(x)     => self.apply_move(*x),
+                Instruction::Move(x)     => self.apply_move_flatearth(*x),
                 Instruction::Rotation(r) => self.apply_rotation(*r),
             }
         }
     }
 
     // Apply a move instruction
-    fn apply_move(&mut self, distance: i32) {        
+    fn apply_move_flatearth(&mut self, distance: i32) {        
         let mut squares = self.map.keys()
          .filter(|(r, c)| match self.heading {
             Heading::Right => *r == self.loc.0,
@@ -123,6 +123,15 @@ impl Grid {
         }        
     }
 
+    // Apply instructions for P2 using different wrapping ruless
+    fn apply_instructions(&mut self, instructions: &Vec<Instruction>) {
+
+    }
+
+    fn apply_move(&mut self, distance: i32) {
+        
+    }
+
     // Apply a rotation instruction
     fn apply_rotation(&mut self, r: Rotation) {        
         match self.heading {
@@ -150,12 +159,18 @@ impl Grid {
 
 
 fn main() {
-    let instructions = instructions_from_string(&std::fs::read_to_string("instructions.txt").unwrap());     
-    let mut grid = Grid::from_str(&std::fs::read_to_string("map.txt").unwrap()).unwrap();    
+    let instructions = instructions_from_string(&std::fs::read_to_string("sample_instructions.txt").unwrap());     
+    let grid = Grid::from_str(&std::fs::read_to_string("sample.txt").unwrap()).unwrap();    
 
-    grid.apply_instructions(&instructions);
-    let password = grid.get_password();
+    // Part one
+    let mut g1 = grid.clone();
+    g1.apply_instructions_flatearth(&instructions);
+    let password = g1.get_password();
     println!("Part one: {}", password);
+
+    // Part two
+    let mut g2 = grid.clone();
+    
 }
 
 // Parses the map instructions from a string
